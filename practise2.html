@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #764ba2;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            min-height: 60px;
+        }
+        .attempts {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎮 Number Guessing Game</h1>
+    <p>Guess a number between 1 and 100</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100">
+    <br>
+    <button onclick="makeGuess()">Submit Guess</button>
+    <button onclick="startNewGame()">New Game</button>
+    <div id="message"></div>
+    <p class="attempts">Attempts: <span id="attempts">0</span></p>
+</div>
+
+<script>
+    let secretNumber = 0;
+    let attempts = 0;
+
+    function startNewGame() {
+        secretNumber = Math.floor(Math.random() * 100) + 1;
+        attempts = 0;
+        document.getElementById("message").textContent = "Game started! Make a guess.";
+        document.getElementById("attempts").textContent = "0";
+        document.getElementById("guessInput").value = "";
+        document.getElementById("guessInput").focus();
+    }
+
+    function makeGuess() {
+        const userInput = document.getElementById("guessInput").value;
+        const messageDiv = document.getElementById("message");
+
+        if (userInput === "") {
+            messageDiv.textContent = "Please enter a number!";
+            messageDiv.style.color = "red";
+            return;
+        }
+
+        const guess = parseInt(userInput);
+
+        if (isNaN(guess) || guess < 1 || guess > 100) {
+            messageDiv.textContent = "Please enter a valid number between 1 and 100!";
+            messageDiv.style.color = "red";
+            return;
+        }
+
+        attempts++;
+        document.getElementById("attempts").textContent = attempts;
+
+        if (guess === secretNumber) {
+            messageDiv.textContent = `🎉 Correct! The number was ${secretNumber}. You did it in ${attempts} attempts!`;
+            messageDiv.style.color = "green";
+            document.getElementById("guessInput").disabled = true;
+        } else if (guess < secretNumber) {
+            messageDiv.textContent = "📈 Too low! Try a higher number.";
+            messageDiv.style.color = "blue";
+        } else {
+            messageDiv.textContent = "📉 Too high! Try a lower number.";
+            messageDiv.style.color = "blue";
+        }
+
+        document.getElementById("guessInput").value = "";
+        document.getElementById("guessInput").focus();
+    }
+
+    // Allow Enter key to submit guess
+    document.getElementById("guessInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            makeGuess();
+        }
+    });
+
+    // Start game on load
+    startNewGame();
+</script>
+
+</body>
+</html>
